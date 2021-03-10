@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t lambrix/react-test -f ./client/Dockerfile.dev ./client
+  
+script:
+  - docker run -e CI=true lambrix/react-test npm test
+
+after_success:
+  - docker build -t lambrix/multi-client ./client
+  - docker build -t lambrix/multi-nginx ./nginx
+  - docker build -t lambrix/multi-server ./server
+  - docker build -t lambrix/multi-worker ./worker
+  
+  - echo "$DOCKER_PASSWORD" | docker login -U "$DOCKER_ID" --password-stdin
+
+  - docker push lambrix/multi-client   
+  - docker push lambrix/multi-nginx   
+  - docker push lambrix/multi-server   
+  - docker push lambrix/multi-worker   
