@@ -24,7 +24,6 @@ function App() {
         </header>
         <div>
           <Route exact path="/" component={Fib} />
-		  <p>Hello</p>
           <Route path="/otherpage" component={OtherPage} />
         </div>
       </div>
